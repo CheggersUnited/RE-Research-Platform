@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block title %} {{author.first_name}} {{author.last_name}}{% endblock %}
+{% block page %} {{author.first_name}} {{author.last_name}}{% endblock %}
+{% block nav %}{% endblock %}
+
+{% block content %}
+<div class="card" style="width: 50%; padding-top: 2.5em;">
+    
+    <h1> {{author.first_name}} {{author.last_name}}</h1>
+    <p><a href='#'>{{author.email}}</a></p> 
+    <br><br>
+     
+    <p style="font:strong;">PUBLICATIONS</p>
+     <br><br>
+    <table>
+        <th>Publication Date</th>
+        <th>Title</th>
+        
+        {% for publication in {{author.get_publications()}}%}
+        <tr>
+          <td>{{publication.publication_date}}</td>
+          <td>{publication.publication.title}</td>
+        </tr>
+        {%endfor%}
+         
+    </table>
+  </div>
+
+{% endblock %}
