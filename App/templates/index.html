@@ -1,10 +1,19 @@
 {% extends "layout.html" %}
-{% block title %}Flask MVC App{% endblock %}
-{% block page %}Flask MVC App{% endblock %}
+{% block title %}Home{% endblock %}
+{% block page %}Home{% endblock %}
 
-{{ super() }}
 
 {% block content %}
-    <h1>Flask MVC</h1>
-    <p>This is a boileplate flask application which follows the MVC pattern for structuring the project.</p>
+<h1 style='font-size:medium;'><center>UWI Research <cheggers style='font: size 15px; font:strong;'>By Cheggers United</cheggers> </center></h1>
+    <br>
+        <p><center>Home of up to {{publication.get_all_publications_json().length}} different research papers, just a search away</center> </p>
+    <br><br>
+
+    <div class="topnav" sytle=' overflow: hidden;'>
+        <a class="active" href="#" style='float:left; display:block; text-align:center; padding: 20px 20px; font-size:medium'>Author</a>
+        <a href="#" style='float:left; display:block; text-align:center; padding: 20px 20px; font-size:medium'>Publications</a>
+        <input type="text" placeholder="Search library">
+      </div>
+
+
 {% endblock %}
