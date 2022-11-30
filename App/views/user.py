@@ -34,10 +34,14 @@ def pubtree(id):
     root, authors, publications = author_publication_tree(id)
     return render_template("pubtree.html", root=root)
 
-@user_views.route("/<id>",methods=["GET"])
+@user_views.route("/author/<id>",methods=["GET"])
 def author(id):
     author = get_author_by_id(id)
     return render_template("author_page.html", author = author) #Change to author template
+
+@user_views.route("/profile", methods=["GET"])
+def profile():
+    return redirect(url_for(".author"), id=current_identity.id)
 
 @user_views.route("/publication/<id>", methods=["GET"])
 def publication(id):

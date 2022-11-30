@@ -1,5 +1,4 @@
 from App.database import db
-# import Publication
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from App.node import Node
@@ -10,7 +9,7 @@ class Author(db.Model):
     first_name =  db.Column("first_name", db.String(60), nullable=False)
     last_name =  db.Column("last_name", db.String(60), nullable=False)
     email = db.Column("email", db.String(60), nullable=False)
-    password = db.Column("password", db.String(60), nullable=False)
+    password = db.Column("password", db.String(120), nullable=False)
     records = db.relationship("PublishingRecord", backref="author", lazy=True, cascade="all, delete-orphan")
 
     def __init__(self, first_name, last_name, email, password):

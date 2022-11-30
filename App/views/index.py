@@ -1,5 +1,5 @@
 from flask import Blueprint, redirect, render_template, request, send_from_directory,url_for
-from flask_jwt import unauthorized_loader
+from App.controllers.publication import get_all_publications
 index_views = Blueprint('index_views', __name__, template_folder='../templates')
 
 # @jwt.unauthorized_loader
@@ -8,9 +8,7 @@ index_views = Blueprint('index_views', __name__, template_folder='../templates')
 
 @index_views.route('/', methods=['GET'])
 def index_page():
-    return render_template('signup.html')
-
-@jwt_required
-@index_views.route('/home',methods=['GET'])
-def home():
-    return render_template("index.html") 
+    length = len(get_all_publications())
+    fields = [  "Climate Change", "Cancer Research", "Music Therapy", "Ocean Acidification", 
+                "Urban Development", "Mental Health", "Sustainable Agriculture"]
+    return render_template('index.html', length=length, fields=fields)
