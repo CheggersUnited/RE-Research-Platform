@@ -37,7 +37,12 @@ def pubtree(id):
 @user_views.route("/<id>",methods=["GET"])
 def author(id):
     author = get_author_by_id(id)
-    return render_template("author.html",author = author.toJSON()) #Change to author template
+    return render_template("author_page.html", author = author) #Change to author template
+
+@user_views.route("/publication/<id>", methods=["GET"])
+def publication(id):
+    publication = get_publication(id)
+    return render_template("publication_page.html", publication=publication)
 
 @user_views.route("/addpublication", methods=["GET", "POST"])
 def add_publication():
@@ -51,8 +56,8 @@ def add_publication():
 
 @user_views.route("/addauthors", methods=["GET", "POST"])
 def add_authors():
+    data = request.args.get("data", None)
     if request.method == "POST":
-        data = request.args.get("data", None)
         authors = []
         for fname, lname, email in zip( request.form.getlist("fname"),
                                         request.form.getlist("lname"),
@@ -62,4 +67,4 @@ def add_authors():
         publication = create_publication(data["title"], data["field"], data["publication_date"], authors)
         return redirect(url_for(".author"), id=current_identity.id)
     else:
-        return render_template("add_author.html")
+        return render_template("add_author.html", data=data)
