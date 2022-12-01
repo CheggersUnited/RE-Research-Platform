@@ -10,7 +10,8 @@ def login():
         form = request.form
         author = get_author_by_id(1)
         if author:
-            return redirect(url_for("index_views.index_page"))
+            print("working up to here")
+            return redirect(url_for('index_views.index_page'))
         else:
             flash("Invalid email or password.")
             return render_template("login.html")
@@ -55,7 +56,7 @@ def add_publication():
         # data = request.get_data()
         # session["data"] = data
         print("testing 2 yes")
-        return redirect(url_for(".add_publication"))
+        return redirect(url_for(".add_authors"))
     else:
         fields = [  "Climate Change", "Cancer Research", "Music Therapy", "Ocean Acidification", 
                     "Urban Development", "Mental Health", "Sustainable Agriculture"]
