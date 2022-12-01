@@ -42,7 +42,11 @@
 
     <div style="padding-top: 4%;" class="container" id="content">{% block content %}{% endblock %}</div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="App/static/main.js"></script>
+    <script>
+      
+      M.AutoInit();
+    </script>
   </body>
 </html>

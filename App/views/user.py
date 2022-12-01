@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, jsonify, request, send_from_directory, redirect, url_for, flash
+from flask import Blueprint, render_template, jsonify, request, send_from_directory, redirect, url_for, flash, session
 from flask_jwt import jwt_required, current_identity
 from App.controllers import *
 
@@ -53,16 +53,17 @@ def publication(id):
 @user_views.route("/addpublication", methods=["GET", "POST"])
 def add_publication():
     if request.method == "POST":
-        data = request.get_json()
-        return redirect((url_for(".add_authors")), data=data)
+        data = request.get_data()
+        # session["data"] = data
+        print("testing 2 yes")
+        return redirect("/addauthors")
     else:
         fields = [  "Climate Change", "Cancer Research", "Music Therapy", "Ocean Acidification", 
                     "Urban Development", "Mental Health", "Sustainable Agriculture"]
-        render_template("add_publication.html", fields=fields)
+        return render_template("add_publication.html", fields=fields)
 
 @user_views.route("/addauthors", methods=["GET", "POST"])
 def add_authors():
-    data = request.args.get("data", None)
     if request.method == "POST":
         authors = []
         for fname, lname, email in zip( request.form.getlist("fname"),
@@ -70,7 +71,10 @@ def add_authors():
                                         request.form.getlist("email")):
             author = {"first_name": fname, "last_name": lname, "email": email}
             authors.append(author)
+        # data = session["data"]
         publication = create_publication(data["title"], data["field"], data["publication_date"], authors)
         return redirect(url_for(".author"), id=current_identity.id)
     else:
-        return render_template("add_author.html", data=data)
+        
+        print("testig")
+        return render_template("add_author.html")

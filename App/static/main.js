@@ -1,5 +1,3 @@
-M.AutoInit();
-
 let i = 1;
 function add_author(){
     let form = document.getElementById("authors_form");
