@@ -8,7 +8,7 @@ class Author(db.Model):
     id = db.Column("id", db.Integer, primary_key=True)
     first_name =  db.Column("first_name", db.String(60), nullable=False)
     last_name =  db.Column("last_name", db.String(60), nullable=False)
-    email = db.Column("email", db.String(60), nullable=False)
+    email = db.Column("email", db.String(60), unique=True, nullable=False)
     password = db.Column("password", db.String(120), nullable=False)
     records = db.relationship("PublishingRecord", backref="author", lazy=True, cascade="all, delete-orphan")
 

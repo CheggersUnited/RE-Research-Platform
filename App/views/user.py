@@ -20,14 +20,15 @@ def login():
 @user_views.route("/signup", methods=["GET", "POST"])
 def signup():
     if request.method == "POST":
-        form = request.get_json()
+        form = request.form
         author = create_author(form["fname"], form["lname"], form["email"], form["password"])
         if not author:
             flash("Author already exists.")
             return render_template("signup.html")
-        else:
-            flash("Author account succesfully created.")
-            return render_template("index.html")
+        flash("Author account succesfully created.")
+        return redirect(url_for("index_views.index_page"))
+    else: 
+        return render_template("signup.html")
 
 @user_views.route("/<id>/pubtree", methods=["GET"])
 def pubtree(id):

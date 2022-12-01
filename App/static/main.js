@@ -25,6 +25,3 @@ function add_author(){
     `;
 };
 
-function display_author_nodes(){
-    
-};
