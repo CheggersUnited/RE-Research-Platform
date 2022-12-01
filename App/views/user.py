@@ -4,6 +4,10 @@ from App.controllers import *
 
 user_views = Blueprint('user_views', __name__, template_folder='../templates')
 
+@user_views.route("/", methods=["GET"])
+def index_page():
+    return redirect("/login")
+
 @user_views.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -11,7 +15,8 @@ def login():
         author = get_author_by_id(1)
         if author:
             print("working up to here")
-            return redirect(url_for('index_views.index_page'))
+            # return redirect(url_for('index_views.index_page'))
+            return 'working'
         else:
             flash("Invalid email or password.")
             return render_template("login.html")
