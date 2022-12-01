@@ -4,15 +4,18 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import *
 
 from App.main import create_app
-from App.database import create_db
+from App.database import create_db,db
 from App.models import  Author, Publication
 from App.controllers import (
-    create_user,
-    get_all_users_json,
+    create_author,
+    create_publication,
+    get_publication_by_title,
+    get_publication_by_field,
+    get_publication,
     authenticate,
-    get_user,
-    get_user_by_username,
-    update_user
+    get_author_by_id,
+    get_author_by_name,
+    get_all_authors
 )
 
 from wsgi import app
@@ -27,11 +30,11 @@ class AuthorUnitTests(unittest.TestCase):
 
     def test_new_author(self):
         author = Author("John","Doe","JohnDoe@mail.com","bobpass")
-        assert author.first_name == "John" and author.last == "Doe" and author.email == "JohnDoe@mail.com"
+        assert author.first_name == "John" and author.last_name == "Doe" and author.email == "JohnDoe@mail.com"
     
-    def test_author_toJSON(self):
+    def test_author_toDict(self):
         author = Author("John","Doe","JohnDoe@mail.com","bobpass")
-        author_json = author.toJSON()
+        author_json = author.toDict()
         self.assertDictEqual(author_json, {
             'id': None,
             'first_name': "John",
@@ -41,7 +44,7 @@ class AuthorUnitTests(unittest.TestCase):
     
     def test_password(self):
         author = Author("John","Doe","JohnDoe@mail.com","bobpass")
-        self.assertFalse("bobpass",author.password)
+        self.assertNotEqual("bobpass",author.password)
 
 
 
@@ -49,7 +52,6 @@ class PublicationUnitTests(unittest.TestCase):
     def test_new_publication(self):
         authors = []
         publication = Publication("test", "comp", "10/10/10")
-        author = Author("John","Doe","JohnDoe@mail.com","bobpass")
         self.assertTrue("test" == publication.title and publication.field == "comp" and publication.publication_date == "10/10/10")
 
     def test_publication_toDict(self):
@@ -65,7 +67,6 @@ class PublicationUnitTests(unittest.TestCase):
 '''
     Integration Tests
 '''
-
 # This fixture creates an empty database for the test and deletes it after the test
 # scope="class" would execute the fixture once and resued for all methods in the class
 @pytest.fixture(autouse=True, scope="module")
@@ -77,33 +78,56 @@ def empty_db():
 
 
 def test_authenticate():
-    user = create_user("Bob Moog", "bobpass")
-    assert authenticate("bob", "bobpass") != None
+    author = create_author("John","Black","JohnBlack@mail.com","bobpass")
+    assert authenticate("JohnBlack@mail.com", "bobpass") != None
 
-class UsersIntegrationTests(unittest.TestCase):
+class AuthorIntegrationTests(unittest.TestCase):
 
     def test_create_author(self):
-        author = create_user("Bob Moog", "05/08/2001", "BSc. Computer Science")
-        assert author.name == "Bob Moog"
+        author = create_author("John","Doe","JohnDoe@mail.com","bobpass")
+        self.assertIsNotNone(Author.query.filter_by(email="JohnDoe@mail.com").first())
+
+    def test_get_author_by_id(self):
+        author = get_author_by_id(1)
+        self.assertIsNotNone(author)
+
+    def test_get_author_by_name(self):
+        author = get_author_by_name("John","Doe")
+        self.assertIsNotNone(author)
+
+    def test_get_author_publications(self):
+        self.assertNone(get_author_publications(1))
+
+    def publication_tree_test(self):
+        pass
+
+    
+class PublicationIntegrationTests(unittest.TestCase):
 
     def test_create_publication(self):
-        publication=create_publication([{"title":"Intro to Computer Science"},{"authors":[author.toJSON() for author in authors]},{"coauthors":[coauthor.toJSON() for coauthor in coauthors]}])
-        assert publication.title=="Intro to Computer Science"
+        authors = [
+            {
+                "first_name":"John",
+                "last_name" :"Doe" 
+            },
+            {
+                "first_name":"John",
+                "last_name" :"Lennon"
+            }
+        ]
+        publication = create_publication("test", "comp", "10/10/10", authors)
+        self.assertIsNotNone(publication)
 
-    def test_get_author_json(self):
-        author_json=get_author_json()
-        self.assertListEqual([{"name": "Bob Moog"},{"dob":"05/08/2001"},{"qualifications":"BSc. Computer Engineering"}], author_json)
+    def test_get_publication_by_title(self):
+        publication =  get_publication_by_title("test")
+        self.assertIsNotNone(publication)
+
+    def test_get_publication_by_id(self):
+        publication = get_publication(1)
+        self.assertIsNotNone(publication)
+    
+    def test_get_publication_by_field(self):
+        publication = get_publication_by_field("comp")
+        self.assertIsNotNone(publication)
 
 
-    def test_get_publication_json(self):
-        publication_json= get_publication_json()
-        self.assertListEqual([{"title":"Intro to Computer Science"},{"authors":[author.toJSON() for author in authors]},{"coauthors":[coauthor.toJSON() for coauthor in coauthors]}])
-
-    def test_get_all_users_json(self):
-        users_json = get_all_users_json()
-        self.assertListEqual([{"id":1, "username":"bob"}, {"id":2, "username":"rick"}], users_json)
-
-    def test_update_user(self):
-        update_user(1, "ronnie")
-        user = get_user(1)
-        assert user.username == "ronnie"

@@ -40,8 +40,6 @@ def get_author_by_id(id):
     author = Author.query.filter_by(id=id).first()
     return author
 
-def create_new_author_account():
-    pass
 
 def author_publication_tree(id):
     author = get_author_by_id(id)

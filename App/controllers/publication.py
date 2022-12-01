@@ -24,7 +24,6 @@ def add_authors_to_publication(publication, authors):
     db.session.commit()
     return publication
 
-
 def get_publication_by_title(title):
     return Publication.query.filter_by(title=title).first()
 
