@@ -4,20 +4,20 @@
 {% block nav %}{% endblock %}
 
 {% block content %}
-    <form action="/addpublication" method="post">
+    <form name="pubform" action="/addpublication" method="post">
         <div class="row">
             <div class="input-field col s12">
                 <label for="title">Title</label>
-                <input type="text" name="title">
+                <input type="text" name="title" autofocus>
             </div>
         </div>
         <div class="row">
-            <div class="input-field col s12">
+            <div class="col s12">
                 <label for="field">Field</label>
                 <select name="field">
-                    <option value="" disbaled selected>Select your field</option>
-                    {% for i in range(fields|length %}
-                    <option value="{{i+1}}">{{fields[i]}}</option>
+                    <option value="0" disabled selected>Select your field</option>
+                    {% for field in fields %}
+                    <option value="{{loop.index}}">{{field}}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -30,7 +30,7 @@
         </div>
         <div class="row">
             <div class="col s12">
-                <button class="center" type="submit">Add Authors</button>
+                <input class="center" type="submit" value="Add Authors">
             </div>
         </div>
     </form>

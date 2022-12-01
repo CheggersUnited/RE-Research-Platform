@@ -12,8 +12,8 @@ def load_user(Author_id):
 def no_authorization():
     return redirect("/login")
 
-def authenticate(email, password):
-    author = Author.query.filter_by(email=email).first()
+def authenticate(username, password):
+    author = Author.query.filter_by(email=username).first()
     if author and author.check_password(password):
         return author
     return None
