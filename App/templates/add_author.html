@@ -4,27 +4,36 @@
 {% block nav %}{% endblock %}
 
 {% block content %}
-    <form action="" method="post" id="authors_form">
-        <div class="row">
-            <div class="col s6">1</div>
-            <div class="col s12 input-field">
+    <form action="" method="post" id="authors_form" class="collection" onforminput="return false;">
+        <div style="display: none;">
+            <input type="text" value="{{data}}" name="data">
+        </div>
+        <div class="row collection-item valign-wrapper">
+            <div class="col s1">1</div>
+            <div class="col s3 input-field">
                 <label for="fname">First Name</label>
                 <input class="input-field col s12" type="text" name="fname">
             </div>
         
-            <div class="col s12 input-field">
+            <div class="col s4 input-field">
                 <label for="lname">Last Name</label>
                 <input class="input-field col s12" type="text" name="lname">
             </div>
 
-            <div class="col s12 input-field">
+            <div class="col s4 input-field">
                 <label for="email">Email</label>
                 <input class="input-field col s12" type="text" name="email">
             </div>
         </div>
     </form>
-    <a class="btn-floating" onclick="add_author()">
+    <a class="btn-floating right" onclick="add_author()">
         <i class="material-icons">add</i>
     </a>
-    <button class="btn waves-effect waves-light center" form="authors_form" type="submit">Submit</button>
+    <a style="margin-right: 8px;" class="btn-floating right" onclick="remove_author()">
+        <i class="material-icons">delete</i>
+    </a>
+    <div class="center">
+        <button class="btn waves-effect waves-light" form="authors_form" type="submit">Submit</button>
+    </div>
+    
 {% endblock %}

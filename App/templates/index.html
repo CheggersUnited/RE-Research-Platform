@@ -1,10 +1,37 @@
 {% extends "layout.html" %}
-{% block title %}Flask MVC App{% endblock %}
-{% block page %}Flask MVC App{% endblock %}
+{% block title %}Home{% endblock %}
+{% block page %}Home{% endblock %}
 
-{{ super() }}
 
 {% block content %}
-    <h1>Flask MVC</h1>
-    <p>This is a boileplate flask application which follows the MVC pattern for structuring the project.</p>
+<form name="home_form" action="/" method="post"></form>
+    <div class="pagination" style="margin-top: 4%;">
+        <li class="active"><a href="/">Author</a></li>
+        <li class="waves-effect"><a href="/">Publication</a></li>
+    </div>
+
+    <nav style="border-radius: 5px; margin-bottom: 5%;" class="purple">
+    <div class="nav-wrapper">
+        <form>
+            <div class="input-field">
+                <input type="search" placeholder="Search Here" required>
+                <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+                <i class="material-icons">close</i>
+            </div>
+        </form>
+    </div>
+    </nav>
+
+    <h5>Fields</h5>
+    <div class="divider"></div>
+    <ul class="pagination" style="display: flex;">
+        {% for field in fields %}
+            <li style="height: auto; width: auto; flex-basis: 1; flex-grow: 1;" class="waves-effect">
+                <a style="font-size: small; " href="/">{{field}}</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <div class="divider"></div>
+
+
 {% endblock %}

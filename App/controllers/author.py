@@ -13,9 +13,6 @@ def create_author(first_name, last_name, email, password):
         return None
     return new_author
 
-def get_author_by_id(id):
-    return Author.query.get(id).one()
-
 def get_all_authors():
     return Author.query.all()
 
@@ -23,13 +20,15 @@ def get_all_authors_json():
     authors = Author.query.all()
     if not Author:
         return []
-    authors = [author.toJSON() for author in authors]
+    authors = [author.toDict() for author in authors]
     return authors
 
 def get_author_by_name(first_name,last_name):
     print(first_name,last_name)
-    author = Author.query.filter_by(first_name=first_name)
-    author.query.filter_by(last_name = last_name).first()
+    authors = Author.query.filter_by(first_name=first_name)
+    author = authors.filter_by(last_name = last_name).first()
+    if not author:                              
+        return None
     return author
     
 def create_default_author_account(first_name, last_name, email):
@@ -38,15 +37,8 @@ def create_default_author_account(first_name, last_name, email):
     return new_author == None
 
 def get_author_by_id(id):
-    author = Author.query.filter_by(id=id).all()
+    author = Author.query.filter_by(id=id).first()
     return author
-
-
-def get_author_publications(id):
-    author = get_author(id)
-    if not author:
-        return []
-    return author.get_publications()
 
 
 def author_publication_tree(id):
@@ -55,3 +47,9 @@ def author_publication_tree(id):
     publications = []
     queue = Queue()
     return author.getPublicationTree(root, authors, publications, queue)
+
+def delete_author(id):
+    author = get_author_by_id(id)
+    db.session.delete(author)
+    db.session.commit()
+    return True
