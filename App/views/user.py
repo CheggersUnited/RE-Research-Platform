@@ -7,10 +7,10 @@ user_views = Blueprint('user_views', __name__, template_folder='../templates')
 @user_views.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        form = request.get_json()
+        form = request.form
         author = authenticate(form["email"], form["password"])
-        if user:
-            return render_template("index.html")
+        if author:
+            return redirect(url_for("index_views.index_page")), 200
         else:
             flash("Invalid email or password.")
             return render_template("login.html")
@@ -53,10 +53,10 @@ def publication(id):
 @user_views.route("/addpublication", methods=["GET", "POST"])
 def add_publication():
     if request.method == "POST":
-        data = request.get_data()
+        # data = request.get_data()
         # session["data"] = data
         print("testing 2 yes")
-        return redirect("/addauthors")
+        return redirect(url_for(".add_publication"))
     else:
         fields = [  "Climate Change", "Cancer Research", "Music Therapy", "Ocean Acidification", 
                     "Urban Development", "Mental Health", "Sustainable Agriculture"]
