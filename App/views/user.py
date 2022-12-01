@@ -38,7 +38,8 @@ def pubtree(id):
 @user_views.route("/author/<id>",methods=["GET"])
 def author(id):
     author = get_author_by_id(id)
-    return render_template("author_page.html", author = author) #Change to author template
+    publications = author.getPublications()
+    return render_template("author_page.html", author = author, publications=publications) #Change to author template
 
 @user_views.route("/profile", methods=["GET"])
 def profile():

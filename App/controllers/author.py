@@ -44,13 +44,6 @@ def get_author_by_id(id):
 def create_new_author_account():
     pass
 
-def get_author_publications(id):
-    author = get_author(id)
-    if not author:
-        return []
-    return author.get_publications()
-
-
 def author_publication_tree(id):
     author = get_author_by_id(id)
     authors = []

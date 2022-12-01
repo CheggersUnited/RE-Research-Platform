@@ -29,8 +29,8 @@ class Author(db.Model):
 
     def getPublications(self):
         publications = []
-        for record in records:
-            publications.append(record.publication)
+        for record in self.records:
+            publications.append(self.record.publication)
         return publications
 
     # def getPublicationTree(self, authors, publications, queue):
