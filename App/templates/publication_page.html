@@ -4,7 +4,7 @@
 {% block nav %}{% endblock %}
 
 {% block content %}
-    <img style="margin-top: 10%;" class="center responsive-img" src="https://thisartworkdoesnotexist.com/image" 
+    <img style="margin-top: 10%;" class="center responsive-img" src="https://thisartworkdoesnotexist.com" 
         alt="Publication Cover Image">
     <div class="row">
         <div class="col s12 center">{{publication.title}}</div>
@@ -16,7 +16,7 @@
         <div class="col s12 center">{{publication.publication_date}}</div>
     </div>
     <ul class="collection row" style="margin-top: 20%;">
-        {% for author in {{publication.get_authors()}} %}
+        {% for author in authors %}
         <li class="collection-item avatar col s12">
             <img src="https://thispersondoesnotexist.com/image" alt="Author Image">
             <span class="title">{{author.first_name}} {{author.last_name}}</span>

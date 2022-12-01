@@ -15,9 +15,9 @@
             <div class="col s12">
                 <label for="field">Field</label>
                 <select name="field">
-                    <option value="0" disabled selected>Select your field</option>
+                    <option value="" disabled selected>Select your field</option>
                     {% for field in fields %}
-                    <option value="{{loop.index}}">{{field}}</option>
+                    <option value="{{field}}">{{field}}</option>
                     {% endfor %}
                 </select>
             </div>

@@ -30,7 +30,7 @@ class Author(db.Model,UserMixin):
     def getPublications(self):
         publications = []
         for record in self.records:
-            publications.append(self.record.publication)
+            publications.append(record.publication)
         return publications
 
     # def getPublicationTree(self, authors, publications, queue):

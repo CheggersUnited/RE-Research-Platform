@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, jsonify, request, send_from_directory, redirect, url_for, flash
-from flask_login import login_required
+from flask_login import login_required, current_user
 from App.controllers import *
+import ast
 
 user_views = Blueprint('user_views', __name__, template_folder='../templates')
 
@@ -47,25 +48,24 @@ def pubtree(id):
 def author(id):
     author = get_author_by_id(id)
     publications = author.getPublications()
-    return render_template("author_page.html", author = author, publications=publications) #Change to author template
+    return render_template("author_page.html", author = author, publications=publications) 
+
+@user_views.route("/publication/<id>",methods=["GET"])
+def publication(id):
+    publication = get_publication(id)
+    authors = publication.getAuthors()
+    return render_template("publication_page.html", authors = authors, publication=publication) #Change to author template
 
 @user_views.route("/profile", methods=["GET"])
 def profile():
-    return redirect(url_for(".author"), id=current_identity.id)
-
-@user_views.route("/publication/<id>", methods=["GET"])
-def publication(id):
-    publication = get_publication(id)
-    return render_template("publication_page.html", publication=publication)
+    return redirect(url_for(".author"), id=current_user.id)
 
 @user_views.route("/addpublication", methods=["GET", "POST"])
 @login_required
 def add_publication():
     if request.method == "POST":
-        # data = request.get_data()
-        # session["data"] = data
-        print("testing 2 yes")
-        return redirect(url_for(".add_authors"))
+        data = request.form.to_dict()   
+        return redirect(url_for(".add_authors", data=data))
     else:
         fields = [  "Climate Change", "Cancer Research", "Music Therapy", "Ocean Acidification", 
                     "Urban Development", "Mental Health", "Sustainable Agriculture"]
@@ -77,13 +77,18 @@ def add_publication():
 def add_authors():
     if request.method == "POST":
         authors = []
+        data = request.form['data']
         for fname, lname, email in zip( request.form.getlist("fname"),
                                         request.form.getlist("lname"),
                                         request.form.getlist("email")):
             author = {"first_name": fname, "last_name": lname, "email": email}
             authors.append(author)
-        # data = session["data"]
-        publication = create_publication(data["title"], data["field"], data["publication_date"], authors)
-        return redirect(url_for(".author"), id=current_identity.id)
+        data = ast.literal_eval(data)
+        publication = create_publication(data['title'], data["field"], data["publication_date"], authors)
+        if not publication:
+            flash("This Publication already exists")
+            return redirect(url_for(".add_publication"))
+        return redirect("/publication/{}".format(publication.id))
     else:
-        return render_template("add_author.html")
+        data = request.args.get('data', None)
+        return render_template("add_author.html", data=data)
