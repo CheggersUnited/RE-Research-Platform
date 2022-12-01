@@ -8,7 +8,7 @@ class Publication(db.Model):
     publication_date = db.Column("publication_date", db.DateTime, nullable=False)
     records = db.relationship("PublishingRecord", backref="publication", lazy=True, cascade="all, delete-orphan")
 
-    def __init__(self ,title, fields, publication_date):
+    def __init__(self ,title, field, publication_date):
         self.title = title
         self.field = field
         self.publication_date = publication_date

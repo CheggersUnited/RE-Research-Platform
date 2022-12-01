@@ -12,12 +12,10 @@ from App.controllers import (
     get_publication_by_title,
     get_publication_by_field,
     get_publication,
-    get_all_users_json,
     authenticate,
     get_author_by_id,
     get_author_by_name,
-    get_all_authors, 
-    update_user
+    get_all_authors
 )
 
 from wsgi import app
@@ -32,11 +30,11 @@ class AuthorUnitTests(unittest.TestCase):
 
     def test_new_author(self):
         author = Author("John","Doe","JohnDoe@mail.com","bobpass")
-        assert author.first_name == "John" and author.last == "Doe" and author.email == "JohnDoe@mail.com"
+        assert author.first_name == "John" and author.last_name == "Doe" and author.email == "JohnDoe@mail.com"
     
-    def test_author_toJSON(self):
+    def test_author_toDict(self):
         author = Author("John","Doe","JohnDoe@mail.com","bobpass")
-        author_json = author.toJSON()
+        author_json = author.toDict()
         self.assertDictEqual(author_json, {
             'id': None,
             'first_name': "John",
@@ -46,7 +44,7 @@ class AuthorUnitTests(unittest.TestCase):
     
     def test_password(self):
         author = Author("John","Doe","JohnDoe@mail.com","bobpass")
-        self.assertFalse("bobpass",author.password)
+        self.assertNotEqual("bobpass",author.password)
 
 
 
@@ -54,7 +52,6 @@ class PublicationUnitTests(unittest.TestCase):
     def test_new_publication(self):
         authors = []
         publication = Publication("test", "comp", "10/10/10")
-        author = Author("John","Doe","JohnDoe@mail.com","bobpass")
         self.assertTrue("test" == publication.title and publication.field == "comp" and publication.publication_date == "10/10/10")
 
     def test_publication_toDict(self):
@@ -81,8 +78,8 @@ def empty_db():
 
 
 def test_authenticate():
-    user = create_user("Bob Moog", "bobpass")
-    assert authenticate("bob", "bobpass") != None
+    author = create_author("John","Black","JohnBlack@mail.com","bobpass")
+    assert authenticate("JohnBlack@mail.com", "bobpass") != None
 
 class AuthorIntegrationTests(unittest.TestCase):
 
