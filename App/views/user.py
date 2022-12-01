@@ -1,15 +1,17 @@
 from flask import Blueprint, render_template, jsonify, request, send_from_directory, redirect, url_for, flash
-from flask_jwt import jwt_required, current_identity
+from flask_login import login_required
 from App.controllers import *
 
 user_views = Blueprint('user_views', __name__, template_folder='../templates')
+
 
 @user_views.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
         form = request.get_json()
         author = authenticate(form["email"], form["password"])
-        if user:
+        if author:
+            loginuser(author,True)
             return render_template("index.html")
         else:
             flash("Invalid email or password.")
@@ -29,17 +31,28 @@ def signup():
             flash("Author account succesfully created.")
             return render_template("index.html")
 
+@user_views.route("/logout",methods=["GET"])
+@login_required
+def logout():
+    logoutuser()
+    redirect("/login")
+
 @user_views.route("/<id>/pubtree", methods=["GET"])
+@login_required
 def pubtree(id):
     root, authors, publications = author_publication_tree(id)
     return render_template("pubtree.html", root=root)
 
+
 @user_views.route("/<id>",methods=["GET"])
+@login_required
 def author(id):
     author = get_author_by_id(id)
-    return render_template("author.html",author = author.toJSON()) #Change to author template
+    return render_template("author_page.html",author = author)
+
 
 @user_views.route("/addpublication", methods=["GET", "POST"])
+@login_required
 def add_publication():
     if request.method == "POST":
         data = request.get_json()
@@ -49,7 +62,9 @@ def add_publication():
                     "Urban Development", "Mental Health", "Sustainable Agriculture"]
         render_template("add_publication.html", fields=fields)
 
+
 @user_views.route("/addauthors", methods=["GET", "POST"])
+@login_required
 def add_authors():
     if request.method == "POST":
         data = request.args.get("data", None)

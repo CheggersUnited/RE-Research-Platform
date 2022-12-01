@@ -1,10 +1,9 @@
 from App.database import db
-# import Publication
 from werkzeug.security import check_password_hash, generate_password_hash
-
+from flask_login import UserMixin
 from App.node import Node
 
-class Author(db.Model):
+class Author(db.Model,UserMixin):
     __tablename__ = "author"
     id = db.Column("id", db.Integer, primary_key=True)
     first_name =  db.Column("first_name", db.String(60), nullable=False)
