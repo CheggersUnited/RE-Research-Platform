@@ -11,12 +11,11 @@ def create_publication(title, field, publication_date, authors):
         if exists == None:
             new_author = author.create_default_author_account(auth.first_name, auth.last_name)
             new_record = PublishingRecord(new_author.id, new_publication.id)
-            # db.session.add(new_record)
+            db.session.add(new_author)
         else:
             new_record = PublishingRecord(exists.id, new_publication.id)
-    db.session.add(new_record)
+        db.session.add(new_record)
     db.session.commit()
-
     return new_publication
 
 
@@ -30,7 +29,7 @@ def get_all_publications():
     return Publication.query.all()
 
 def get_publication_by_field(field):
-    return Publication.query.filter_by(field=field).all
+    return Publication.query.filter_by(field=field).all()
 
 #TO REMOVE
 # def get_all_publications_json():
