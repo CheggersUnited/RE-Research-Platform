@@ -5,7 +5,7 @@ from datetime import *
 
 from App.main import create_app
 from App.database import create_db
-from App.models import User, Author, Publication
+from App.models import  Author, Publication
 from App.controllers import (
     create_user,
     get_all_users_json,
@@ -23,83 +23,43 @@ LOGGER = logging.getLogger(__name__)
 '''
    Unit Tests
 '''
-class UserUnitTests(unittest.TestCase):
-
-    def test_new_user(self):
-        user = User("bob", "bobpass")
-        assert user.username == "bob"
-
-    def test_user_toJSON(self):
-        user = User("bob", "bobpass")
-        user_json = user.toJSON()
-        self.assertDictEqual(user_json, {"id":None, "username":"bob"})
-    
-    def test_hashed_password(self):
-        password = "mypass"
-        hashed = generate_password_hash(password, method='sha256')
-        user = User("bob", password)
-        assert user.password != password
-
-    def test_check_password(self):
-        password = "mypass"
-        user = User("bob", password)
-        assert user.check_password(password)
-
 class AuthorUnitTests(unittest.TestCase):
 
     def test_new_author(self):
-        author = Author("Bob Moog", "05/08/2001", "BSc. Computer Science")
-        assert author.name == "Bob Moog" and author.dob == datetime.strptime("05/08/2001", "%d/%m/%Y") and author.qualifications == "BSc. Computer Science"
-
+        author = Author("John","Doe","JohnDoe@mail.com","bobpass")
+        assert author.first_name == "John" and author.last == "Doe" and author.email == "JohnDoe@mail.com"
+    
     def test_author_toJSON(self):
-        author = Author("Bob Moog", "05/08/2001", "BSc. Computer Science")
+        author = Author("John","Doe","JohnDoe@mail.com","bobpass")
         author_json = author.toJSON()
         self.assertDictEqual(author_json, {
-            "id": None,
-            "name": "Bob Moog",
-            "dob": datetime.strptime("05/08/2001", "%d/%m/%Y"),
-            "qualifications": "BSc. Computer Science"
+            'id': None,
+            'first_name': "John",
+            'last_name': "Doe",
+            'email': "JohnDoe@mail.com"
         })
+    
+    def test_password(self):
+        author = Author("John","Doe","JohnDoe@mail.com","bobpass")
+        self.assertFalse("bobpass",author.password)
 
-    # def test_get_author_publications(self):
-    #     # create author, create publication for that author, call author.get_publications
-    #     authors = []
-    #     author = Author("Bob Moog", "05/08/2001", "BSc. Computer Science")
-    #     authors.append(author)
-    #     publication = Publication("Intro to Computer Science", authors, [])
-    #     author_publications = author.get_publications()
-    #     # assert true if equal
-    #     self.assertDictEqual(author_publications.pop(), publication.toJSON())
+
 
 class PublicationUnitTests(unittest.TestCase):
     def test_new_publication(self):
         authors = []
-        coauthors = []
-        author = Author("Bob Moog", "05/08/2001", "BSc. Computer Science")
-        authors.append(author)
-        coauthor = Author("Bob Dule", "06/09/2002", "BSc. Computer Engineering")
-        coauthors.append(coauthor)
-        publication = Publication("Intro to Computer Science", authors, coauthors)
-        assert (
-            publication.title=="Intro to Computer Science" 
-            and publication.authors==authors 
-            and publication.coauthors==coauthors
-        )
+        publication = Publication("test", "comp", "10/10/10")
+        author = Author("John","Doe","JohnDoe@mail.com","bobpass")
+        self.assertTrue("test" == publication.title and publication.field == "comp" and publication.publication_date == "10/10/10")
 
-    def test_publication_toJSON(self):
-        authors = []
-        coauthors = []
-        author = Author("Bob Moog", "05/08/2001", "BSc. Computer Science")
-        authors.append(author)
-        coauthor = Author("Bob Dule", "06/09/2002", "BSc. Computer Engineering")
-        coauthors.append(coauthor)
-        publication = Publication("Intro to Computer Science", authors, coauthors)
-        publication_json = publication.toJSON()
+    def test_publication_toDict(self):
+        publication = Publication("Intro to Computer Science", "comp", "10/10/10")
+        publication_json = publication.toDict()
         self.assertDictEqual(publication_json, {
             "id": None,
             "title": "Intro to Computer Science",
-            "authors": [author.toJSON() for author in authors],
-            "coauthors": [coauthor.toJSON() for coauthor in coauthors]
+            "field": "comp",
+            "publication_date": "10/10/10"
         })
 
 '''
