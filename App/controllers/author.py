@@ -26,7 +26,7 @@ def get_all_authors_json():
 def get_author_by_name(first_name,last_name):
     print(first_name,last_name)
     authors = Author.query.filter_by(first_name=first_name)
-    authors.query.filter_by(last_name = last_name).all()
+    authors.query.filter_by(last_name = last_name).first()
     if not authors:                              
         new_author = create_default_author_account(first_name,last_name)    
         authors = [new_author]

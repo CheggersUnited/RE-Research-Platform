@@ -1,5 +1,6 @@
 import os
 from flask import Flask
+from App.controllers.auth import login_manager
 from flask_uploads import DOCUMENTS, IMAGES, TEXT, UploadSet, configure_uploads
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
@@ -7,11 +8,13 @@ from werkzeug.datastructures import  FileStorage
 from datetime import timedelta
 
 
+
+
 from App.database import create_db
 
-from App.controllers import (
-    setup_jwt
-)
+# from App.controllers import (
+#     setup_jwt
+# )
 
 from App.views import (
     user_views,
@@ -60,6 +63,7 @@ def create_app(config={}):
     configure_uploads(app, photos)
     add_views(app, views)
     create_db(app)
-    setup_jwt(app)
+    # setup_jwt(app)
     app.app_context().push()
+    login_manager.init_app(app)
     return app
