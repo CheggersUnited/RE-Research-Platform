@@ -1,12 +1,12 @@
 from flask_login import login_user, logout_user,LoginManager
-from App.models import author
+from App.models.author import Author
 from flask import redirect,render_template,url_for
 
 login_manager = LoginManager()
 
 @login_manager.user_loader
-def load_user(Author_id):
-    return User.query.get(user_id)
+def load_user(author_id):
+    return Author.query.get(author_id)
 
 @login_manager.unauthorized_handler
 def no_authorization():
