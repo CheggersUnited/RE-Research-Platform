@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, jsonify, request, send_from_directory, redirect, url_for, flash
-from flask_login import login_required
+from flask_login import login_required, current_user
 from App.controllers import *
+import ast
 
 user_views = Blueprint('user_views', __name__, template_folder='../templates')
 
@@ -8,28 +9,28 @@ user_views = Blueprint('user_views', __name__, template_folder='../templates')
 @user_views.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        form = request.get_json()
+        form = request.form
         author = authenticate(form["email"], form["password"])
         if author:
             loginuser(author,True)
-            return render_template("index.html")
+            return redirect(url_for("index_views.index_page"))
         else:
             flash("Invalid email or password.")
             return render_template("login.html")
-    else:
-        return render_template("login.html")
+    return render_template("login.html")
 
 @user_views.route("/signup", methods=["GET", "POST"])
 def signup():
     if request.method == "POST":
-        form = request.get_json()
+        form = request.form
         author = create_author(form["fname"], form["lname"], form["email"], form["password"])
         if not author:
             flash("Author already exists.")
             return render_template("signup.html")
-        else:
-            flash("Author account succesfully created.")
-            return render_template("index.html")
+        flash("Author account succesfully created.")
+        return redirect(url_for("index_views.index_page"))
+    else: 
+        return render_template("signup.html")
 
 @user_views.route("/logout",methods=["GET"])
 @login_required
@@ -43,38 +44,51 @@ def pubtree(id):
     root, authors, publications = author_publication_tree(id)
     return render_template("pubtree.html", root=root)
 
-
-@user_views.route("/<id>",methods=["GET"])
-@login_required
+@user_views.route("/author/<id>",methods=["GET"])
 def author(id):
     author = get_author_by_id(id)
-    return render_template("author_page.html",author = author)
+    publications = author.getPublications()
+    return render_template("author_page.html", author = author, publications=publications) 
 
+@user_views.route("/publication/<id>",methods=["GET"])
+def publication(id):
+    publication = get_publication(id)
+    authors = publication.getAuthors()
+    return render_template("publication_page.html", authors = authors, publication=publication) #Change to author template
+
+@user_views.route("/profile", methods=["GET"])
+def profile():
+    return redirect(url_for(".author"), id=current_user.id)
 
 @user_views.route("/addpublication", methods=["GET", "POST"])
 @login_required
 def add_publication():
     if request.method == "POST":
-        data = request.get_json()
-        return redirect((url_for(".add_authors")), data=data)
+        data = request.form.to_dict()   
+        return redirect(url_for(".add_authors", data=data))
     else:
         fields = [  "Climate Change", "Cancer Research", "Music Therapy", "Ocean Acidification", 
                     "Urban Development", "Mental Health", "Sustainable Agriculture"]
-        render_template("add_publication.html", fields=fields)
+        return render_template("add_publication.html", fields=fields)
 
 
 @user_views.route("/addauthors", methods=["GET", "POST"])
 @login_required
 def add_authors():
     if request.method == "POST":
-        data = request.args.get("data", None)
         authors = []
+        data = request.form['data']
         for fname, lname, email in zip( request.form.getlist("fname"),
                                         request.form.getlist("lname"),
                                         request.form.getlist("email")):
             author = {"first_name": fname, "last_name": lname, "email": email}
             authors.append(author)
-        publication = create_publication(data["title"], data["field"], data["publication_date"], authors)
-        return redirect(url_for(".author"), id=current_identity.id)
+        data = ast.literal_eval(data)
+        publication = create_publication(data['title'], data["field"], data["publication_date"], authors)
+        if not publication:
+            flash("This Publication already exists")
+            return redirect(url_for(".add_publication"))
+        return redirect("/publication/{}".format(publication.id))
     else:
-        return render_template("add_author.html")
+        data = request.args.get('data', None)
+        return render_template("add_author.html", data=data)

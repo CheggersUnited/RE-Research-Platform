@@ -1,0 +1,26 @@
+#flashedmessage {
+    background-color: transparent;
+    box-shadow: none;
+    z-index: 1;
+    padding: 0;
+    position: fixed; 
+    width: fit-content;
+  }
+  
+  #flashedmessage li{
+    margin: 1em 0;
+    z-index: 3;
+    height: 8vmin;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    padding: 0.5rem 2rem;
+  }
+  
+  #flashedmessage span{
+    position: absolute;
+    right: 1em;
+    cursor: pointer;
+  }
