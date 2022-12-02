@@ -56,42 +56,39 @@ def author(id):
 def publication(id):
     publication = get_publication(id)
     authors = publication.getAuthors()
-    return render_template("publication_page.html", authors = authors, publication=publication) #Change to author template
+    return render_template("publication_page.html", authors = authors, publication=publication)
 
 @user_views.route("/profile", methods=["GET"])
 @login_required
 def profile():
-    return redirect(url_for(".author"), id=current_user.id)
+    return redirect(url_for(".author", id=current_user.id))
 
-@user_views.route("/addpublication", methods=["GET", "POST"])
+@user_views.route("/<id>/addpublication", methods=["GET", "POST"])
 @login_required
-def add_publication():
+def add_publication(id):
     if request.method == "POST":
-        data = request.form.to_dict()   
-        return redirect(url_for(".add_authors", data=data))
+        data = request.form
+        publication = create_publication(data["title"], data["field"], data["publication_date"])
+        return redirect(url_for(".add_authors", id=publication.id))
     else:
         fields = [  "Climate Change", "Cancer Research", "Music Therapy", "Ocean Acidification", 
                     "Urban Development", "Mental Health", "Sustainable Agriculture"]
-        return render_template("add_publication.html", fields=fields)
+        return render_template("add_publication.html", fields=fields, id=id)
 
-
-@user_views.route("/addauthors", methods=["GET", "POST"])
+@user_views.route("/<id>/addauthors", methods=["GET", "POST"])
 @login_required
-def add_authors():
+def add_authors(id):
     if request.method == "POST":
         authors = []
-        data = request.form['data']
+        pub_authors = get_publication(id).getAuthors()
         for fname, lname, email in zip( request.form.getlist("fname"),
                                         request.form.getlist("lname"),
                                         request.form.getlist("email")):
             author = {"first_name": fname, "last_name": lname, "email": email}
             authors.append(author)
-        data = ast.literal_eval(data)
-        publication = create_publication(data['title'], data["field"], data["publication_date"], authors)
-        if not publication:
-            flash("This Publication already exists")
-            return redirect(url_for(".add_publication"))
+            print(author)
+            print(authors)
+        publication = add_authors_to_publication(id, authors)
         return redirect("/publication/{}".format(publication.id))
     else:
-        data = request.args.get('data', None)
-        return render_template("add_author.html", data=data)
+        return render_template("add_author.html", id=id)

@@ -3,22 +3,34 @@
 {% block page %}Publication Tree{% endblock %}
 {% block nav %}{% endblock %}
 
-{% block content %}
-    {% for node in root recursive %}
-        <ul class="collapsible">
-            <li>
-                <div class="collapsible-header">{{node.node.first_name}} {{node.node.last_name}}</div>
-                <div class="collapsible-body">
+{% macro pubtree(root) %}
+    <ul class="collapsible">
+        <li>
+            <div class="collapsible-header">{{root.node.first_name}} {{root.node.last_name}}</div>
+            {% if root.children | length %}
+                <div class="collapsible-body indigo lighten-5">
                     {% for child in root.children %}
                         <ul class="collapsible">
                             <li>
                                 <div class="collapsible-header">{{child.node.title}}</div>
-                                <div class="collapsible-body">{{loop(child.node.children)}}</div>
+                                {% if child.children | length %}
+                                    <div class="collapsible-body pink lighten-5">
+                                            {% for author in child.children %}
+                                                {{ pubtree(author) }}
+                                            {% endfor %}
+                                    </div>
+                                {% endif %}
                             </li>
                         </ul>
                     {% endfor %}
                 </div>
-            </li>
-        </ul>
-    {% endfor %}
+            {% endif %}
+        </li>
+    </ul>
+{% endmacro %}
+
+{% block content %}
+    <div class="container">
+        {{ pubtree( root ) }}
+    </div>
 {% endblock %}

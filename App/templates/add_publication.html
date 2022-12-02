@@ -4,7 +4,7 @@
 {% block nav %}{% endblock %}
 
 {% block content %}
-    <form name="pubform" action="/addpublication" method="post">
+    <form name="pubform" action="/{{id}}/addpublication" method="post">
         <div class="row">
             <div class="input-field col s12">
                 <label for="title">Title</label>
@@ -29,8 +29,8 @@
             </div>
         </div>
         <div class="row">
-            <div class="col s12">
-                <input class="center" type="submit" value="Add Authors">
+            <div class="col s12 center">
+                <input class="btn" type="submit" value="Add Authors">
             </div>
         </div>
     </form>

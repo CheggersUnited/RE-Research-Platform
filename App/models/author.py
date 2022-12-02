@@ -63,12 +63,13 @@ class Author(db.Model,UserMixin):
             coAuthors = child.node.getAuthors()
             for author in coAuthors:
                 if author not in authors:
+                    node = Node(author, [])
+                    child.children.append(node)
+                    queue.put(node)
                     authors.append(author)
-                    child.node.children.append(author)
-                    queue.put(Node(author, []))
         if not queue.empty():
             author = queue.get()
-            root, authors, publications = author.node.getPublicationTree(author, authors, publications, queue)
+            node, authors, publications = author.node.getPublicationTree(author, authors, publications, queue)
         return root, authors, publications
         
     def toDict(self):
