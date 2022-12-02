@@ -37,5 +37,11 @@ def get_publication(id):
 def get_all_publications():
     return Publication.query.all()
 
-def get_publication_by_field(field):
-    return Publication.query.filter_by(field=field).all
+def get_publications_by_field(field):
+    return Publication.query.filter_by(field=field).all()
+
+def publication_search(title):
+    publications = Publication.query.filter(Publication.title.contains(title)).all()
+    if publications:
+        return publications
+    return None
