@@ -48,32 +48,48 @@ def pubtree(id):
 @login_required
 def author(id):
     author = get_author_by_id(id)
+    authorized = False
+    if author.id == current_user.id:
+        authorized = True
     publications = author.getPublications()
-    return render_template("author_page.html", author = author, publications=publications) 
+    return render_template("author_page.html", author=author, publications=publications, authorized=authorized) 
 
 @user_views.route("/publication/<id>",methods=["GET"])
 @login_required
 def publication(id):
     publication = get_publication(id)
     authors = publication.getAuthors()
-    return render_template("publication_page.html", authors = authors, publication=publication)
+    authorized = False
+    for author in authors:
+        if author.id == current_user.id:
+            authorized = True
+    return render_template("publication_page.html", authors=authors, publication=publication, authorized=authorized)
 
 @user_views.route("/profile", methods=["GET"])
 @login_required
 def profile():
     return redirect(url_for(".author", id=current_user.id))
 
-@user_views.route("/<id>/addpublication", methods=["GET", "POST"])
+@user_views.route("/addpublication", methods=["GET", "POST"])
 @login_required
-def add_publication(id):
+def add_publication():
     if request.method == "POST":
         data = request.form
+        author = get_author_by_id(id)
         publication = create_publication(data["title"], data["field"], data["publication_date"])
+        if not publication:
+            if publication in author.getPublications():
+                flash("Publication already added.")
+            else:
+                flash("Publication already exists. Request author permission.")
+        authors = []
+        authors.append()
+        publication = add_authors_to_publication(publication.id, authors)
         return redirect(url_for(".add_authors", id=publication.id))
     else:
         fields = [  "Climate Change", "Cancer Research", "Music Therapy", "Ocean Acidification", 
                     "Urban Development", "Mental Health", "Sustainable Agriculture"]
-        return render_template("add_publication.html", fields=fields, id=id)
+        return render_template("add_publication.html", fields=fields)
 
 @user_views.route("/<id>/addauthors", methods=["GET", "POST"])
 @login_required
@@ -86,8 +102,6 @@ def add_authors(id):
                                         request.form.getlist("email")):
             author = {"first_name": fname, "last_name": lname, "email": email}
             authors.append(author)
-            print(author)
-            print(authors)
         publication = add_authors_to_publication(id, authors)
         return redirect("/publication/{}".format(publication.id))
     else:

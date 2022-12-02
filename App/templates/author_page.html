@@ -16,7 +16,9 @@
       </div>
       <div class="row">
         <div class="col s6">Publications:</div>
-        <a class="btn-floating right" href="/{{author.id}}/addpublication"><i class="material-icons">add</i></a>
+        {% if authorized == True %}
+          <a class="btn-floating right" href="/addpublication"><i class="material-icons">add</i></a>
+        {% endif %}
       </div>
 
       <div class="divider"></div>

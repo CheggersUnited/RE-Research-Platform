@@ -10,7 +10,7 @@ from App.controllers import (
     create_author,
     create_publication,
     get_publication_by_title,
-    get_publication_by_field,
+    get_publications_by_field,
     get_publication,
     authenticate,
     get_author_by_id,
@@ -118,11 +118,11 @@ class PublicationIntegrationTests(unittest.TestCase):
         publication = get_publication(1)
         self.assertIsNotNone(publication)
     
-    def test_get_publication_by_field(self):
-        publication = get_publication_by_field("comp")
+    def test_get_publications_by_field(self):
+        publication = get_publications_by_field("comp")
         self.assertFalse(publication==None)
 
-    def publication_tree_test(self):
+    def test_get_publication_tree(self):
         date = datetime.now()
         test_publication1 = create_publication("test1", "testing", date)
         test_publication2 = create_publication("test2", "testing", date)
@@ -143,9 +143,3 @@ class PublicationIntegrationTests(unittest.TestCase):
         author = get_author_by_name("John", "Lennon")
         root, authors, publications = author_publication_tree(author.id)
         self.assertTrue(publication[0] == testpublication1 and publication[1] == testpublication2)
-    
-
-
-    
-
-
