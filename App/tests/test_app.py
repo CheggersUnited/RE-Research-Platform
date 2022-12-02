@@ -15,7 +15,8 @@ from App.controllers import (
     authenticate,
     get_author_by_id,
     get_author_by_name,
-    get_all_authors
+    get_all_authors,
+    add_authors_to_publication
 )
 
 from wsgi import app
@@ -98,29 +99,15 @@ class AuthorIntegrationTests(unittest.TestCase):
     def test_get_author_publications(self):
         author = get_author_by_name("John","Doe")
         publications = author.getPublications()
-        self.assertNone(publications)
+        self.assertEquals([], publications)
 
-    def publication_tree_test(self):
-        pass
 
     
 class PublicationIntegrationTests(unittest.TestCase):
 
     def test_create_publication(self):
-        authors = [
-            {
-                "first_name":"John",
-                "last_name" :"Smith",
-                "email":"johnsmith@mail.com"
-            },
-            {
-                "first_name":"John",
-                "last_name" :"Lennon",
-                "email":"johnlennon@mail.com"
-            }
-        ]
         date = datetime.now()
-        publication = create_publication("tests", "comp", date, authors)
+        publication = create_publication("tests", "comp", date)
         self.assertIsNotNone(publication)
 
     def test_get_publication_by_title(self):
@@ -133,6 +120,32 @@ class PublicationIntegrationTests(unittest.TestCase):
     
     def test_get_publication_by_field(self):
         publication = get_publication_by_field("comp")
-        self.assertIsNotNone(publication)
+        self.assertFalse(publication==None)
+
+    def publication_tree_test(self):
+        date = datetime.now()
+        test_publication1 = create_publication("test1", "testing", date)
+        test_publication2 = create_publication("test2", "testing", date)
+        authors = [
+            {
+                "first_name":"John",
+                "last_name" :"Smith",
+                "email":"johnsmith@mail.com"
+            },
+            {
+                "first_name":"John",
+                "last_name" :"Lennon",
+                "email":"johnlennon@mail.com"
+            }
+        ]
+        add_authors_to_publication(test_publication1.id, authors)
+        add_authors_to_publication(test_publication2.id, authors[1])
+        author = get_author_by_name("John", "Lennon")
+        root, authors, publications = author_publication_tree(author.id)
+        self.assertTrue(publication[0] == testpublication1 and publication[1] == testpublication2)
+    
+
+
+    
 
 

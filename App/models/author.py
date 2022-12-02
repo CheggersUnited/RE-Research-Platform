@@ -33,24 +33,6 @@ class Author(db.Model,UserMixin):
             publications.append(record.publication)
         return publications
 
-    # def getPublicationTree(self, authors, publications, queue):
-    #     if self not in authors:
-    #         authors.append(list(self))
-    #     coauthors = []
-    #     for publication in self.getPublications():
-    #         if publication not in publications:
-    #             publications.append(publication)
-    #             coAuthors.extend(publication.getAuthors())
-    #     publications.append("end")
-    #     for author in coAuthors:
-    #         if author not in authors:
-    #             authors.append(author)
-    #             queue.put(author)       #queue here is a python queue (queue.Queue)
-    #     authors.append("end")
-    #     if not queue.empty():
-    #         authors, publications = queue.get().getPublicationTree(authors, publications, queue)
-    #     return authors, publications
-
     def getPublicationTree(self, root, authors, publications, queue):
         if self not in authors:
             authors.append(self)
