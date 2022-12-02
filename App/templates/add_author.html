@@ -4,10 +4,7 @@
 {% block nav %}{% endblock %}
 
 {% block content %}
-    <form action="" method="post" id="authors_form" class="collection" onforminput="return false;">
-        <div style="display: none;">
-            <input type="text" value="{{data}}" name="data">
-        </div>
+    <form action="/{{id}}/addauthors" method="post" id="authors_form" class="collection">
         <div class="row collection-item valign-wrapper">
             <div class="col s1">1</div>
             <div class="col s3 input-field">

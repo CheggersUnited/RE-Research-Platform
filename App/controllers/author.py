@@ -1,7 +1,8 @@
-from App.models import Author
+from App.models import Author, PublishingRecord
 from App.database import db
 from sqlalchemy.exc import IntegrityError
 from queue import Queue
+from . import publication
 
 def create_author(first_name, last_name, email, password):
     new_author = Author(first_name=first_name, last_name=last_name, email=email, password=password)
@@ -24,7 +25,6 @@ def get_all_authors_json():
     return authors
 
 def get_author_by_name(first_name,last_name):
-    print(first_name,last_name)
     authors = Author.query.filter_by(first_name=first_name)
     author = authors.filter_by(last_name = last_name).first()
     if not author:                              
@@ -33,19 +33,26 @@ def get_author_by_name(first_name,last_name):
     
 def create_default_author_account(first_name, last_name, email):
     password = first_name + "pass"
-    new_author = create_author(first_name, last_name, email, password)
-    return new_author == None
+    return create_author(first_name, last_name, email, password)
 
 def get_author_by_id(id):
     author = Author.query.filter_by(id=id).first()
     return author
 
+def add_publication_to_author(id, title, field, publication_date):
+    author = get_author_by_id(id)
+    publication = publication.create_publication(title, field, publication_date)
+    new_record = PublishingRecord(author.id, publication.id)
+    db.session.add(new_record)
+    db.session.commit()
+    return author, publication
 
 def author_publication_tree(id):
     author = get_author_by_id(id)
     authors = []
     publications = []
     queue = Queue()
+    root = None
     return author.getPublicationTree(root, authors, publications, queue)
 
 def delete_author(id):

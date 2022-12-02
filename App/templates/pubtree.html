@@ -4,21 +4,27 @@
 {% block nav %}{% endblock %}
 
 {% block content %}
-    {% for node in root recursive %}
+    {%- for node in root recursive %}
         <ul class="collapsible">
             <li>
                 <div class="collapsible-header">{{node.node.first_name}} {{node.node.last_name}}</div>
                 <div class="collapsible-body">
-                    {% for child in root.children %}
+                {% if node.children | length %}
+                    {% for child in node.children %}
                         <ul class="collapsible">
                             <li>
                                 <div class="collapsible-header">{{child.node.title}}</div>
-                                <div class="collapsible-body">{{loop(child.node.children)}}</div>
+                                <div class="collapsible-body">
+                                    {% if child.children | length %}
+                                        {{ loop(child.children) }}
+                                    {% endif %}
+                                </div>
                             </li>
                         </ul>
                     {% endfor %}
+                {% endif %}
                 </div>
             </li>
         </ul>
-    {% endfor %}
+    {%- endfor %}
 {% endblock %}
