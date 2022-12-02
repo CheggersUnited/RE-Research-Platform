@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, render_template, request, send_from_directory,url_for
+from flask import Blueprint, redirect, render_template, request, send_from_directory,url_for, flash
 from flask_login import login_required
 from App.controllers import get_publications_by_field, author_search, publication_search
 
@@ -17,6 +17,13 @@ def index_page():
             search_results = publication_search(search)
         else:
             search_results = author_search(search)
+    
+    if search_results == None:
+        flash("No results obtained.")
+        search_results = []
+    elif search_results == 'Invalid':
+        flash("Invalid Search")
+        search_results = []
     
     if search_type == None:
         search_type = 'Author'

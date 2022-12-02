@@ -1,7 +1,6 @@
 {% extends "layout.html" %}
 {% block title %}Publication Tree{% endblock %}
 {% block page %}Publication Tree{% endblock %}
-{% block nav %}{% endblock %}
 
 {% macro pubtree(root) %}
     <ul class="collapsible">
@@ -31,6 +30,7 @@
 
 {% block content %}
     <div class="container">
+        <blockquote>Click to expand Publication Tree</blockquote>
         {{ pubtree( root ) }}
     </div>
 {% endblock %}
