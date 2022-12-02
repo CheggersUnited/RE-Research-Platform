@@ -80,6 +80,7 @@ def add_publication():
         if not publication:
             if publication in author.getPublications():
                 flash("Publication already added.")
+                
             else:
                 flash("Publication already exists. Request author permission.")
         authors = []
