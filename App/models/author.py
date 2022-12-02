@@ -64,7 +64,7 @@ class Author(db.Model,UserMixin):
             for author in coAuthors:
                 if author not in authors:
                     authors.append(author)
-                    child.children.append(author)
+                    child.children.append(Node(author, []))
                     queue.put(Node(author, []))
         if not queue.empty():
             author = queue.get()

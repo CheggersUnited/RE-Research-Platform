@@ -42,7 +42,6 @@ def logout():
 @login_required
 def pubtree(id):
     root, authors, publications = author_publication_tree(id)
-    root = [root]
     return render_template("pubtree.html", root=root)
 
 @user_views.route("/author/<id>",methods=["GET"])

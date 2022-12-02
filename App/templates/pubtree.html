@@ -3,28 +3,32 @@
 {% block page %}Publication Tree{% endblock %}
 {% block nav %}{% endblock %}
 
+{% macro pubtree(root) %}
+    <ul class="collapsible">
+        <li>
+            <div class="collapsible-header">{{root.node.first_name}} {{root.node.last_name}}</div>
+            <div class="collapsible-body">
+            {% if root.children | length %}
+                {% for child in root.children %}
+                    <ul class="collapsible">
+                        <li>
+                            <div class="collapsible-header">{{child.node.title}}</div>
+                            <div class="collapsible-body">
+                                {% if child.children | length %}
+                                    {% for author in child.children %}
+                                        {{ pubtree(author) }}
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </li>
+                    </ul>
+                {% endfor %}
+            {% endif %}
+            </div>
+        </li>
+    </ul>
+{% endmacro %}
+
 {% block content %}
-    {%- for node in root recursive %}
-        <ul class="collapsible">
-            <li>
-                <div class="collapsible-header">{{node.node.first_name}} {{node.node.last_name}}</div>
-                <div class="collapsible-body">
-                {% if node.children | length %}
-                    {% for child in node.children %}
-                        <ul class="collapsible">
-                            <li>
-                                <div class="collapsible-header">{{child.node.title}}</div>
-                                <div class="collapsible-body">
-                                    {% if child.children | length %}
-                                        {{ loop(child.children) }}
-                                    {% endif %}
-                                </div>
-                            </li>
-                        </ul>
-                    {% endfor %}
-                {% endif %}
-                </div>
-            </li>
-        </ul>
-    {%- endfor %}
+    {{ pubtree( root ) }}
 {% endblock %}
