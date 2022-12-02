@@ -1,6 +1,6 @@
 import os, tempfile, pytest, logging, unittest
 from werkzeug.security import check_password_hash, generate_password_hash
-
+import datetime
 from datetime import *
 
 from App.main import create_app
@@ -96,7 +96,9 @@ class AuthorIntegrationTests(unittest.TestCase):
         self.assertIsNotNone(author)
 
     def test_get_author_publications(self):
-        self.assertNone(get_author_publications(1))
+        author = get_author_by_name("John","Doe")
+        publications = author.getPublications()
+        self.assertNone(publications)
 
     def publication_tree_test(self):
         pass
@@ -108,18 +110,21 @@ class PublicationIntegrationTests(unittest.TestCase):
         authors = [
             {
                 "first_name":"John",
-                "last_name" :"Doe" 
+                "last_name" :"Smith",
+                "email":"johnsmith@mail.com"
             },
             {
                 "first_name":"John",
-                "last_name" :"Lennon"
+                "last_name" :"Lennon",
+                "email":"johnlennon@mail.com"
             }
         ]
-        publication = create_publication("test", "comp", "10/10/10", authors)
+        date = datetime.now()
+        publication = create_publication("tests", "comp", date, authors)
         self.assertIsNotNone(publication)
 
     def test_get_publication_by_title(self):
-        publication =  get_publication_by_title("test")
+        publication =  get_publication_by_title("tests")
         self.assertIsNotNone(publication)
 
     def test_get_publication_by_id(self):

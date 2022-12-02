@@ -1,0 +1,1 @@
+[{"stmt":"SELECT * FROM author;","header":["id","first_name","last_name","email","password"],"rows":[["1","bob","burger","bob@mail.com","sha256$a8gezLtv8adzlwOj$86d6998f3069221d5e73f87dbc431f475065618502b457dcda1320040054c11a"]]}]
