@@ -47,4 +47,28 @@
             </form>
         </div>
     </nav>
+
+    {% if search_results | length %}
+        <div style="margin-bottom: 4%;" class="divider"></div>
+        <ul class="row">
+            <div class="collection">
+                {% for result in search_results %}
+                <li class="card col center">
+                    {% if search_type == 'Author' %}
+                        <a href="/author/{{result.id}}">
+                            <img style="height: 100px; margin-top: 20px;" src="https://thispersondoesnotexist.com/image" alt="Author Image">
+                            <div style="text-decoration: none; color: black;" class="center">{{result.first_name}} {{result.last_name}}</div>
+                        </a>
+                    {% else %}
+                        <a href="/publication/{{result.id}}">
+                            <img style="height: 100px; margin-top: 20px;" src="https://thisartworkdoesnotexist.com" alt="Publication Cover Image">
+                            <div style="text-decoration: none; color: black;" class="center">{{result.title}}</div>
+                        </a>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </div>
+        </ul>
+        <div class="divider"></div>
+    {% endif %}
 {% endblock %}

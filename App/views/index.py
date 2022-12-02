@@ -10,15 +10,13 @@ def index_page():
     field = request.args.get('field')
     search_type = request.args.get('search_type')
     search = request.args.get('search')
+
+    search_results = []
     if search:
         if search_type == 'Publication':
-            print("publication search")
-            publications = publication_search(search)
-            print(publications)
+            search_results = publication_search(search)
         else:
-            print("author search")
-            authors = author_search(search)
-            print(authors)
+            search_results = author_search(search)
     
     if search_type == None:
         search_type = 'Author'
@@ -26,7 +24,7 @@ def index_page():
     publications = []
     if field:
         publications = get_publications_by_field(field)
-        
+
     fields = [  "Climate Change", "Cancer Research", "Music Therapy", "Ocean Acidification", 
                 "Urban Development", "Mental Health", "Sustainable Agriculture"]
-    return render_template('index.html', fields=fields, publications=publications, search_type=search_type)
+    return render_template('index.html', fields=fields, publications=publications, search_type=search_type, search_results=search_results)
