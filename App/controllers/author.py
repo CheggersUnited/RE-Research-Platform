@@ -34,7 +34,7 @@ def get_author_by_name(first_name,last_name):
 def create_default_author_account(first_name, last_name, email):
     password = first_name + "pass"
     new_author = create_author(first_name, last_name, email, password)
-    return new_author == None
+    return new_author
 
 def get_author_by_id(id):
     author = Author.query.filter_by(id=id).first()
