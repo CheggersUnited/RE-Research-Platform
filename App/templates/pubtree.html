@@ -7,28 +7,30 @@
     <ul class="collapsible">
         <li>
             <div class="collapsible-header">{{root.node.first_name}} {{root.node.last_name}}</div>
-            <div class="collapsible-body">
             {% if root.children | length %}
-                {% for child in root.children %}
-                    <ul class="collapsible">
-                        <li>
-                            <div class="collapsible-header">{{child.node.title}}</div>
-                            <div class="collapsible-body">
+                <div class="collapsible-body indigo lighten-5">
+                    {% for child in root.children %}
+                        <ul class="collapsible">
+                            <li>
+                                <div class="collapsible-header">{{child.node.title}}</div>
                                 {% if child.children | length %}
-                                    {% for author in child.children %}
-                                        {{ pubtree(author) }}
-                                    {% endfor %}
+                                    <div class="collapsible-body pink lighten-5">
+                                            {% for author in child.children %}
+                                                {{ pubtree(author) }}
+                                            {% endfor %}
+                                    </div>
                                 {% endif %}
-                            </div>
-                        </li>
-                    </ul>
-                {% endfor %}
+                            </li>
+                        </ul>
+                    {% endfor %}
+                </div>
             {% endif %}
-            </div>
         </li>
     </ul>
 {% endmacro %}
 
 {% block content %}
-    {{ pubtree( root ) }}
+    <div class="container">
+        {{ pubtree( root ) }}
+    </div>
 {% endblock %}
