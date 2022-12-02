@@ -10,13 +10,14 @@ from App.controllers import (
     create_author,
     create_publication,
     get_publication_by_title,
-    get_publication_by_field,
+    get_publications_by_field,
     get_publication,
     authenticate,
     get_author_by_id,
     get_author_by_name,
     get_all_authors,
-    add_authors_to_publication
+    add_authors_to_publication,
+    author_publication_tree
 )
 
 from wsgi import app
@@ -118,18 +119,18 @@ class PublicationIntegrationTests(unittest.TestCase):
         publication = get_publication(1)
         self.assertIsNotNone(publication)
     
-    def test_get_publication_by_field(self):
-        publication = get_publication_by_field("comp")
+    def test_get_publications_by_field(self):
+        publication = get_publications_by_field("comp")
         self.assertFalse(publication==None)
 
-    def publication_tree_test(self):
+    def test_get_publication_tree(self):
         date = datetime.now()
         test_publication1 = create_publication("test1", "testing", date)
         test_publication2 = create_publication("test2", "testing", date)
         authors = [
             {
                 "first_name":"John",
-                "last_name" :"Smith",
+                "last_name":"Smith",
                 "email":"johnsmith@mail.com"
             },
             {
@@ -139,13 +140,7 @@ class PublicationIntegrationTests(unittest.TestCase):
             }
         ]
         add_authors_to_publication(test_publication1.id, authors)
-        add_authors_to_publication(test_publication2.id, authors[1])
+        add_authors_to_publication(test_publication2.id, [authors[1]])
         author = get_author_by_name("John", "Lennon")
         root, authors, publications = author_publication_tree(author.id)
-        self.assertTrue(publication[0] == testpublication1 and publication[1] == testpublication2)
-    
-
-
-    
-
-
+        self.assertTrue(publications[0] == test_publication1 and publications[1] == test_publication2)

@@ -1,11 +1,16 @@
 from App.models import Publication,PublishingRecord
 from App.database import db
+from sqlalchemy.exc import IntegrityError
 from . import author
 
 def create_publication(title, field, publication_date):
     publication = Publication(title, field, publication_date)
-    db.session.add(publication)
-    db.session.commit()
+    try:   
+        db.session.add(publication)
+        db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
+        return None
     return publication
 
 def add_authors_to_publication(id, authors):
