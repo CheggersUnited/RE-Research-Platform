@@ -60,3 +60,27 @@ def delete_author(id):
     db.session.delete(author)
     db.session.commit()
     return True
+
+def author_search(name):
+    if name.count(' ') == 0:
+        author = Author.query.filter_by(last_name=name).all()
+        if len(author) == 0:
+            author = Author.query.filter_by(first_name=name).all()
+            if len(author) == 0:
+                return None
+            else:
+                return author
+        else:
+            return author
+    if name.count(' ')  == 1:
+        parts = name.split()
+        author = Author.query.filter_by(first_name=parts[0], last_name = parts[1])
+        if len(author.all()) != 0:
+            return author.all()  
+        else:
+            author = Author.query.filter_by(first_name=parts[1], last_name = parts[0])
+            if len(author.all()) != 0:
+                return author.all()
+            return None
+    else:
+         return 'Invalid'
