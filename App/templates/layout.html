@@ -16,6 +16,7 @@
     <nav class="purple">
       <div class="nav-wrapper">
         <a href="#!" class="brand-logo center">{% block page %}{% endblock %}</a>
+        {% if current_user.is_authenticated %}
         <div class="nav-wrapper">
             <ul id="nav-mobile" class="left">
                 <li><a href="/">Home</a></li>
@@ -27,6 +28,7 @@
               <li><a href="/logout">Logout</a></li>
             </ul>
         </div>
+        {% endif %}
       </div>
     </nav>
     

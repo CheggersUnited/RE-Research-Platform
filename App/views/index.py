@@ -31,6 +31,8 @@ def index_page():
     publications = []
     if field:
         publications = get_publications_by_field(field)
+        if not publications:
+            flash("No publications in that field yet.")
 
     fields = [  "Climate Change", "Cancer Research", "Music Therapy", "Ocean Acidification", 
                 "Urban Development", "Mental Health", "Sustainable Agriculture"]

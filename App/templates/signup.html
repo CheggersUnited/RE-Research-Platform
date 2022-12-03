@@ -7,22 +7,22 @@
         <form action="/signup" method="post">
             <div class="row">
                 <label for="fname">First Name</label>
-                <input class="input-field col s12" type="text" name="fname">
+                <input class="input-field col s12 validate" type="text" name="fname" required>
             </div>
             
             <div class="row">
                 <label for="lname">Last Name</label>
-                <input class="input-field col s12" type="text" name="lname">
+                <input class="input-field col s12 validate" type="text" name="lname" required>
             </div>
             
             <div class="row">
                 <label for="email">Email</label>
-                <input class="input-field col s12" type="email" name="email">
+                <input class="input-field col s12 validate" type="email" name="email" required>
             </div>
 
             <div class="row">
                 <label for="password">Password</label>
-                <input class="input-field col s12" type="password" name="password">
+                <input class="input-field col s12 validate" type="password" name="password" required>
             </div>
 
             <p class="center">Already have an account? <a href="/login">Click Here to Sign In</a></p>
