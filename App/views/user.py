@@ -84,6 +84,8 @@ def add_publication():
                 if not publication.getAuthors():
                     publication = add_authors_to_publication(publication.id, [{"first_name":current_user.first_name, "last_name":current_user.last_name, "email":current_user.email}])
                     flash("Publication Added.")
+                else:
+                    flash("Publication exists. Must request author permission to add.")
             return redirect("/profile")
         return redirect(url_for(".add_authors", id=publication.id))
     else:
