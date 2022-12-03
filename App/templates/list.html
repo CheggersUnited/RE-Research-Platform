@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block title %}{{heading}}{% endblock %}
+{% block page %}{{heading}}{% endblock %}
+
+{% block content %}
+    <div class="container col s12">
+        {% for item in items %}
+            <div class="container">
+            {% if list_type == 'Author' %}
+                <a style="padding-left: 4vw; color: black;" class="hoverable row card valign-wrapper purple lighten-5" href="/author/{{item.id}}">
+                    <img style="margin: 2vh auto 2vh 0; margin-right: 4vw;" class="col s4 circle responsive-img" src="https://thispersondoesnotexist.com/image" alt="Author Image">
+                    <div style="font-size: large;">{{item.first_name}} {{item.last_name}}</div>
+            {% else %}
+                <a style="padding-left: 4vw; color: black;" class="hoverable row card valign-wrapper purple lighten-5" href="/publication/{{item.id}}">
+                    <img style="margin: 2vh auto 2vh 0; margin-right: 4vw;" class="col s4 circle responsive-img" src="https://thisartworkdoesnotexist.com" alt="Publication Cover Image">
+                    <div style="font-size: large;">{{item.title}}</div>
+            {% endif %}
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

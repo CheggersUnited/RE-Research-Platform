@@ -1,7 +1,6 @@
 {% extends "layout.html" %}
 {% block title %}Signup{% endblock %}
 {% block page %}Signup{% endblock %}
-{% block nav %}{% endblock %}
 
 {% block content %}
     <div style="padding-top: 2.5em; width: min(90vw, 600px); margin: auto;">
@@ -18,13 +17,15 @@
             
             <div class="row">
                 <label for="email">Email</label>
-                <input class="input-field col s12" type="text" name="email">
+                <input class="input-field col s12" type="email" name="email">
             </div>
 
             <div class="row">
                 <label for="password">Password</label>
-                <input class="input-field col s12" type="text" name="password">
+                <input class="input-field col s12" type="password" name="password">
             </div>
+
+            <p class="center">Already have an account? <a href="/login">Click Here to Sign In</a></p>
 
             <div class="center">
                 <button class="btn waves-effect waves-light" type="submit">Submit</button>

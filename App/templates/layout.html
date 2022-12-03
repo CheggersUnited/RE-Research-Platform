@@ -16,15 +16,17 @@
     <nav class="purple">
       <div class="nav-wrapper">
         <a href="#!" class="brand-logo center">{% block page %}{% endblock %}</a>
-        {% block nav %}
         <div class="nav-wrapper">
             <ul id="nav-mobile" class="left">
                 <li><a href="/">Home</a></li>
-                <li><a href="/users">Users Jinja</a></li>
-                <li><a href="/static/users">Users JS</a></li>
+                <li><a href="/profile">My Profile</a></li>
+                <li><a href="/authors">All Authors</a></li>
+                <li><a href="/publications">All Publications</a></li>
+            </ul>
+            <ul id="nav-mobile" class="right">
+              <li><a href="/logout">Logout</a></li>
             </ul>
         </div>
-        {% endblock %}
       </div>
     </nav>
     

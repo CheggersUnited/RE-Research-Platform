@@ -36,7 +36,7 @@ def signup():
 @login_required
 def logout():
     logoutuser()
-    redirect("/login")
+    return redirect("/login")
 
 @user_views.route("/<id>/pubtree", methods=["GET"])
 @login_required
@@ -75,17 +75,16 @@ def profile():
 def add_publication():
     if request.method == "POST":
         data = request.form
-        author = get_author_by_id(id)
         publication = create_publication(data["title"], data["field"], data["publication_date"])
         if not publication:
-            if publication in author.getPublications():
+            publication = get_publication_by_title(data["title"])
+            if publication in current_user.getPublications():
                 flash("Publication already added.")
-                
             else:
-                flash("Publication already exists. Request author permission.")
-        authors = []
-        authors.append()
-        publication = add_authors_to_publication(publication.id, authors)
+                if not publication.getAuthors():
+                    publication = add_authors_to_publication(publication.id, [{"first_name":current_user.first_name, "last_name":current_user.last_name, "email":current_user.email}])
+                    flash("Publication Added.")
+            return redirect("/profile")
         return redirect(url_for(".add_authors", id=publication.id))
     else:
         fields = [  "Climate Change", "Cancer Research", "Music Therapy", "Ocean Acidification", 
@@ -107,3 +106,19 @@ def add_authors(id):
         return redirect("/publication/{}".format(publication.id))
     else:
         return render_template("add_author.html", id=id)
+
+@user_views.route("/authors", methods=["GET"])
+@login_required
+def all_authors():
+    items = get_all_authors()
+    heading = 'Authors'
+    list_type = 'Author'
+    return render_template("list.html", items=items, heading=heading, list_type=list_type)
+
+@user_views.route("/publications", methods=["GET"])
+@login_required
+def all_publications():
+    items = get_all_publications()
+    heading = 'Publications'
+    list_type = 'Publication'
+    return render_template("list.html", items=items, heading=heading, list_type=list_type)
