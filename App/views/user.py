@@ -103,7 +103,8 @@ def add_authors(id):
                                         request.form.getlist("lname"),
                                         request.form.getlist("email")):
             author = {"first_name": fname, "last_name": lname, "email": email}
-            authors.append(author)
+            if(len(author["first_name"]) != 0 and len(author["last_name"])  !=0 and len(author["email"])!=0):
+                authors.append(author)
         current_auth = current_user._get_current_object()
         author = { 
                     "first_name": current_auth.first_name, 
