@@ -104,6 +104,13 @@ def add_authors(id):
                                         request.form.getlist("email")):
             author = {"first_name": fname, "last_name": lname, "email": email}
             authors.append(author)
+        current_auth = current_user._get_current_object()
+        author = { 
+                    "first_name": current_auth.first_name, 
+                    "last_name": current_auth.last_name,
+                    "email":current_auth.email
+                }
+        authors.append(author)
         publication = add_authors_to_publication(id, authors)
         return redirect("/publication/{}".format(publication.id))
     else:
