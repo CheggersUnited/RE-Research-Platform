@@ -28,6 +28,7 @@ def signup():
             flash("Author already exists.")
             return render_template("signup.html")
         flash("Author account succesfully created.")
+        loginuser(author, True)
         return redirect(url_for("index_views.index_page"))
     else: 
         return render_template("signup.html")
