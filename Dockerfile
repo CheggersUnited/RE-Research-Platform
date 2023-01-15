@@ -4,7 +4,7 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY service/ ./service/
+COPY service/ ./App/
 
 RUN useradd --uid 1000 theia && chown  -R theia /app
 USER theia
